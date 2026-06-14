@@ -1,0 +1,7 @@
+com\aston\user\entity\User.class
+com\aston\user\service\UserService.class
+com\aston\user\dao\UserDaoImpl.class
+com\aston\user\console\ConsoleApp.class
+com\aston\user\dao\UserDao.class
+com\aston\user\util\HibernateUtil.class
+com\aston\App.class
