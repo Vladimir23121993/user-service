@@ -8,12 +8,21 @@ import java.util.Optional;
 
 public class UserService {
 
-    private final UserDao userDao = new UserDaoImpl();
+    private final UserDao userDao;
+
+    // Конструктор по умолчанию (использует реальный DAO)
+    public UserService() {
+        this.userDao = new UserDaoImpl();
+    }
+
+    // Конструктор для тестов (принимает мок)
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     public User createUser(String name, String email, Integer age) {
         validate(name, email, age);
-        User user = new User(name, email, age);
-        return userDao.save(user);
+        return userDao.save(new User(name, email, age));
     }
 
     public Optional<User> getUserById(Long id) {
@@ -50,11 +59,14 @@ public class UserService {
     }
 
     private void validate(String name, String email, Integer age) {
-        if (name == null || name.trim().isEmpty())
+        if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Имя не может быть пустым");
-        if (email == null || !email.contains("@"))
+        }
+        if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Некорректный email");
-        if (age == null || age < 0 || age > 150)
+        }
+        if (age == null || age < 0 || age > 150) {
             throw new IllegalArgumentException("Возраст 0-150");
+        }
     }
 }
