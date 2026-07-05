@@ -1,37 +1,23 @@
-package com.aston.user.entity;
+package com.aston.user.dto;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
-public class User {
+public class UserResponseDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 100)
     private String name;
-
-    @Column(nullable = false, unique = true, length = 100)
     private String email;
-
-    @Column(nullable = false)
     private Integer age;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    // Конструкторы
-    public User() {}
+    public UserResponseDto() {}
 
-    public User(String name, String email, Integer age) {
+    public UserResponseDto(Long id, String name, String email, Integer age, LocalDateTime createdAt) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.age = age;
+        this.createdAt = createdAt;
     }
 
     // Геттеры и сеттеры
@@ -52,7 +38,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserResponseDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +

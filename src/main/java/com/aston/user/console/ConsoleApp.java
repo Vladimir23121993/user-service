@@ -1,131 +1,144 @@
 package com.aston.user.console;
 
-import com.aston.user.entity.User;
+import com.aston.user.dto.UserRequestDto;
+import com.aston.user.dto.UserResponseDto;
 import com.aston.user.service.UserService;
-import com.aston.user.util.HibernateUtil;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
-public class ConsoleApp {
+@Component
+public class ConsoleApp implements CommandLineRunner {
 
-    private static final UserService service = new UserService();
-    private static final Scanner scanner = new Scanner(System.in);
+    private final UserService userService;
+    private final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        System.out.println("=== User Service (Hibernate + PostgreSQL) ===\n");
-        boolean running = true;
-        while (running) {
-            printMenu();
-            int choice = readInt("Выберите действие: ");
+    public ConsoleApp(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Override
+    public void run(String... args) {
+        System.out.println("=== User Service Console ===");
+        while (true) {
+            System.out.println("\n1. Создать пользователя");
+            System.out.println("2. Найти по ID");
+            System.out.println("3. Показать всех");
+            System.out.println("4. Обновить пользователя");
+            System.out.println("5. Удалить пользователя");
+            System.out.println("6. Найти по email");
+            System.out.println("0. Выход");
+            System.out.print("Выбор: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
             switch (choice) {
                 case 1 -> createUser();
                 case 2 -> findUserById();
                 case 3 -> findAllUsers();
                 case 4 -> updateUser();
                 case 5 -> deleteUser();
-                case 6 -> findByEmail();
-                case 7 -> findByName();
+                case 6 -> findUserByEmail();
                 case 0 -> {
-                    running = false;
                     System.out.println("До свидания!");
+                    return;
                 }
-                default -> System.out.println("Неверный пункт");
+                default -> System.out.println("Неверный выбор");
             }
         }
-        HibernateUtil.shutdown();
-        scanner.close();
     }
 
-    private static void printMenu() {
-        System.out.println("\n--- МЕНЮ ---");
-        System.out.println("1. Создать пользователя");
-        System.out.println("2. Найти по ID");
-        System.out.println("3. Показать всех");
-        System.out.println("4. Обновить пользователя");
-        System.out.println("5. Удалить пользователя");
-        System.out.println("6. Найти по email");
-        System.out.println("7. Найти по имени (часть)");
-        System.out.println("0. Выход");
-    }
+    private void createUser() {
+        System.out.print("Имя: ");
+        String name = scanner.nextLine();
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        System.out.print("Возраст: ");
+        Integer age = scanner.nextInt();
+        scanner.nextLine();
 
-    private static void createUser() {
-        String name = readString("Имя: ");
-        String email = readString("Email: ");
-        int age = readInt("Возраст: ");
+        UserRequestDto dto = new UserRequestDto();
+        dto.setName(name);
+        dto.setEmail(email);
+        dto.setAge(age);
+
         try {
-            User user = service.createUser(name, email, age);
-            System.out.println("Создан: " + user);
+            UserResponseDto created = userService.createUser(dto);
+            System.out.println("Создан: " + created);
         } catch (Exception e) {
             System.out.println("Ошибка: " + e.getMessage());
         }
     }
 
-    private static void findUserById() {
-        long id = readInt("ID: ");
-        Optional<User> user = service.getUserById(id);
-        System.out.println(user.map(Object::toString).orElse("Не найден"));
-    }
-
-    private static void findAllUsers() {
-        List<User> users = service.getAllUsers();
-        if (users.isEmpty()) System.out.println("Нет пользователей");
-        else users.forEach(System.out::println);
-    }
-
-    private static void updateUser() {
-        long id = readInt("ID пользователя для обновления: ");
-        Optional<User> existing = service.getUserById(id);
-        if (existing.isEmpty()) {
-            System.out.println("Не найден");
-            return;
-        }
-        String name = readString("Новое имя (оставьте пустым): ");
-        String email = readString("Новый email (оставьте пустым): ");
-        String ageStr = readString("Новый возраст (оставьте пустым): ");
-        String finalName = name.isBlank() ? existing.get().getName() : name;
-        String finalEmail = email.isBlank() ? existing.get().getEmail() : email;
-        int finalAge = ageStr.isBlank() ? existing.get().getAge() : Integer.parseInt(ageStr);
+    private void findUserById() {
+        System.out.print("ID: ");
+        Long id = scanner.nextLong();
+        scanner.nextLine();
         try {
-            User updated = service.updateUser(id, finalName, finalEmail, finalAge);
+            UserResponseDto user = userService.getUserById(id);
+            System.out.println("Найден: " + user);
+        } catch (Exception e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+    }
+
+    private void findAllUsers() {
+        List<UserResponseDto> users = userService.getAllUsers();
+        if (users.isEmpty()) {
+            System.out.println("Нет пользователей");
+        } else {
+            users.forEach(System.out::println);
+        }
+    }
+
+    private void updateUser() {
+        System.out.print("ID для обновления: ");
+        Long id = scanner.nextLong();
+        scanner.nextLine();
+        System.out.print("Новое имя: ");
+        String name = scanner.nextLine();
+        System.out.print("Новый email: ");
+        String email = scanner.nextLine();
+        System.out.print("Новый возраст: ");
+        Integer age = scanner.nextInt();
+        scanner.nextLine();
+
+        UserRequestDto dto = new UserRequestDto();
+        dto.setName(name);
+        dto.setEmail(email);
+        dto.setAge(age);
+
+        try {
+            UserResponseDto updated = userService.updateUser(id, dto);
             System.out.println("Обновлён: " + updated);
         } catch (Exception e) {
             System.out.println("Ошибка: " + e.getMessage());
         }
     }
 
-    private static void deleteUser() {
-        long id = readInt("ID пользователя для удаления: ");
-        boolean deleted = service.deleteUser(id);
-        System.out.println(deleted ? "Удалён" : "Не найден");
-    }
-
-    private static void findByEmail() {
-        String email = readString("Email: ");
-        Optional<User> user = service.getUserByEmail(email);
-        System.out.println(user.map(Object::toString).orElse("Не найден"));
-    }
-
-    private static void findByName() {
-        String name = readString("Имя (или часть): ");
-        List<User> users = service.getUsersByName(name);
-        if (users.isEmpty()) System.out.println("Не найдено");
-        else users.forEach(System.out::println);
-    }
-
-    private static String readString(String prompt) {
-        System.out.print(prompt);
-        return scanner.nextLine().trim();
-    }
-
-    private static int readInt(String prompt) {
-        System.out.print(prompt);
-        while (!scanner.hasNextInt()) {
-            System.out.println("Введите число");
-            scanner.next();
-        }
-        int val = scanner.nextInt();
+    private void deleteUser() {
+        System.out.print("ID для удаления: ");
+        Long id = scanner.nextLong();
         scanner.nextLine();
-        return val;
+        try {
+            userService.deleteUser(id);
+            System.out.println("Удалён");
+        } catch (Exception e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+    }
+
+    private void findUserByEmail() {
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        try {
+            UserResponseDto user = userService.getUserByEmail(email);
+            System.out.println("Найден: " + user);
+        } catch (Exception e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
     }
 }
