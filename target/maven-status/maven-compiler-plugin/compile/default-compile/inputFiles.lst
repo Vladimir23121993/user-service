@@ -1,4 +1,5 @@
 C:\Users\Vulkan\user-service\src\main\java\com\aston\App.java
+C:\Users\Vulkan\user-service\src\main\java\com\aston\user\config\SwaggerConfig.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\console\ConsoleApp.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\controller\UserController.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\dao\UserDao.java
@@ -9,6 +10,7 @@ C:\Users\Vulkan\user-service\src\main\java\com\aston\user\dto\UserResponseDto.ja
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\entity\User.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\kafka\UserEventProducer.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\mapper\UserMapper.java
+C:\Users\Vulkan\user-service\src\main\java\com\aston\user\model\UserModel.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\repository\UserRepository.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\service\UserService.java
 C:\Users\Vulkan\user-service\src\main\java\com\aston\user\UserServiceSpringApplication.java

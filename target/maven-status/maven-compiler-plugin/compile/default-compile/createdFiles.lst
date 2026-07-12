@@ -3,12 +3,15 @@ com\aston\user\dto\UserResponseDto.class
 com\aston\user\console\ConsoleApp.class
 com\aston\user\mapper\UserMapper.class
 com\aston\user\dao\UserDao.class
+com\aston\user\model\UserModel.class
 com\aston\App.class
 com\aston\user\service\UserService.class
+com\aston\user\controller\UserController.class
 com\aston\user\dto\UserRequestDto.class
 com\aston\user\dao\UserDaoImpl.class
 com\aston\user\kafka\UserEventProducer.class
 com\aston\user\repository\UserRepository.class
 com\aston\user\dto\UserEventDto.class
 com\aston\user\UserServiceSpringApplication.class
+com\aston\user\config\SwaggerConfig.class
 com\aston\user\util\HibernateUtil.class
