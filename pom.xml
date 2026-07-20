@@ -109,6 +109,20 @@
             <version>1.19.3</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Eureka Client (регистрация в Discovery Server) -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+
+        <!-- Config Client (получение настроек с Config Server) -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+            <version>4.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>
